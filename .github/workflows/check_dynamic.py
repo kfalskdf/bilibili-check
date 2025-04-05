@@ -8,11 +8,13 @@ USER_ID = "486906719"
 BASE_URL = f"https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid={USER_ID}"
 RSS_FILE = "bilibili_dynamic.rss"
 LAST_ID_FILE = "last_dynamic_id.txt"
+cookie = "buvid3=32C7A099-802D-1D22-2916-55467146EED148177infoc; b_nut=1740473048; _uuid=9B75B198-4385-CBDF-54EC-10101B4D1A16BB49581infoc; buvid_fp=d8343e7c6587a5d571a7c669b4478c94; buvid4=6AD296B9-56B3-12A2-8162-3D27515A974749461-025022508-LqM5iGljEC8mrtSIprUkwg%3D%3D; DedeUserID=497740698; DedeUserID__ckMd5=c543ac17028c68af; header_theme_version=CLOSE; enable_web_push=DISABLE; home_feed_column=5; rpdid=|(u)l|~)|lR|0J'u~R|R~JkJ); hit-dyn-v2=1; enable_feed_channel=ENABLE; PVID=1; browser_resolution=2552-1322; opus-goback=1; LIVE_BUVID=AUTO3717429912684266; bp_t_offset_497740698=1051099018408493056; SESSDATA=09709422%2C1759130122%2C3dbee%2A42CjC18wmXRJ-GW-U8buxUTAfOWsly0b0oOKRinaIWmFn0RXrphU6nv27rcy3Ylnur8R8SVm5iNlREME45RHJYV1ZQb2kzTTFuaWRxLWhVX2VCQ2JzeXBacS1Ua1RaS3RocW5LaWExREUzVlFfdTVRNElnZ2NMT1dCVzVCcVcyUFhJdThIX2Nodl9RIIEC; bili_jct=74ca65df79a09cdfac48c8428df33c58; CURRENT_FNVAL=2000"
 
 def get_dynamics():
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Referer": f"https://space.bilibili.com/{USER_ID}/dynamic"
+        "Referer": f"https://space.bilibili.com/{USER_ID}/dynamic",
+        "Cookie": "buvid3=32C7A099-802D-1D22-2916-55467146EED148177infoc; b_nut=1740473048; _uuid=9B75B198-4385-CBDF-54EC-10101B4D1A16BB49581infoc; buvid_fp=d8343e7c6587a5d571a7c669b4478c94; buvid4=6AD296B9-56B3-12A2-8162-3D27515A974749461-025022508-LqM5iGljEC8mrtSIprUkwg%3D%3D; DedeUserID=497740698; DedeUserID__ckMd5=c543ac17028c68af; header_theme_version=CLOSE; enable_web_push=DISABLE; home_feed_column=5; rpdid=|(u)l|~)|lR|0J'u~R|R~JkJ); hit-dyn-v2=1; enable_feed_channel=ENABLE; PVID=1; browser_resolution=2552-1322; opus-goback=1; LIVE_BUVID=AUTO3717429912684266; bp_t_offset_497740698=1051099018408493056; SESSDATA=09709422%2C1759130122%2C3dbee%2A42CjC18wmXRJ-GW-U8buxUTAfOWsly0b0oOKRinaIWmFn0RXrphU6nv27rcy3Ylnur8R8SVm5iNlREME45RHJYV1ZQb2kzTTFuaWRxLWhVX2VCQ2JzeXBacS1Ua1RaS3RocW5LaWExREUzVlFfdTVRNElnZ2NMT1dCVzVCcVcyUFhJdThIX2Nodl9RIIEC; bili_jct=74ca65df79a09cdfac48c8428df33c58; CURRENT_FNVAL=2000"
     }
     
     try:
@@ -30,15 +32,15 @@ def parse_dynamics(data):
     items = []
     for item in data["data"]["items"]:
         # 只处理视频动态（类型 8）
-        if item["type"] == 8:
+        if item["type"] == 'DYNAMIC_TYPE_AV':
             dynamic_id = item["id_str"]
             pub_date = datetime.fromtimestamp(item["modules"]["module_author"]["pub_ts"])
             
             # 提取视频信息
             video_info = item["modules"]["module_dynamic"]["major"]["archive"]
-            video_url = f"https://www.bilibili.com/video/{video_info['aid']}"
+            video_url = f"https://www.bilibili.com/video/{video_info['bvid']}"
             title = video_info["title"]
-            desc = item["modules"]["module_dynamic"]["desc"]["text"]
+            desc = item["modules"]["module_dynamic"]["major"]["archive"]["desc"]
             
             items.append({
                 "id": dynamic_id,
