@@ -2,8 +2,12 @@ name: Bilibili Dynamic Check
 
 on:
   schedule:
-    - cron: "0 * * * *"  # 每小时运行一次
-  workflow_dispatch:     # 允许手动触发
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+permissions:  # 新增权限配置
+  actions: write
+  contents: write
 
 jobs:
   check:
@@ -22,20 +26,21 @@ jobs:
       run: pip install requests
 
     - name: Generate RSS
-      run: python check_dynamic.py
+      run: |
+        python check_dynamic.py
+        ls -la  # 验证文件生成
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # 升级到v4版本
       with:
         name: bilibili-rss
         path: |
           bilibili_dynamic.rss
           last_dynamic_id.txt
-        retention-days: 7  # 自定义保留天数（默认90天）
+        retention-days: 7
 
     - name: Clean history artifacts
-      if: always()
-      uses: geekyeggo/delete-artifact@v1
+      uses: c-hive/gha-remove-artifacts@v1  # 更换更可靠的清理Action
       with:
-        name: bilibili-rss
-        keep-latest: 5  # 仅保留最新5个记录
+        pattern: 'bilibili-rss'
+        keep-latest: 5
