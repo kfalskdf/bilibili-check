@@ -39,8 +39,3 @@ jobs:
           last_dynamic_id.txt
         retention-days: 7
 
-    - name: Clean history artifacts
-      uses: c-hive/gha-remove-artifacts@v1  # 更换更可靠的清理Action
-      with:
-        pattern: 'bilibili-rss'
-        keep-latest: 5
