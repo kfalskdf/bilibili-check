@@ -40,7 +40,7 @@ def parse_dynamics(data):
             video_info = item["modules"]["module_dynamic"]["major"]["archive"]
             video_url = f"https://www.bilibili.com/video/{video_info['bvid']}"
             title = video_info["title"]
-            #desc = item["modules"]["module_dynamic"]["major"]["archive"]["desc"]
+            desc = item["modules"]["module_dynamic"]["major"]["archive"]["desc"]
             
             items.append({
                 "id": dynamic_id,
