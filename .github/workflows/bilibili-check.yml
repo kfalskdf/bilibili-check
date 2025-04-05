@@ -28,7 +28,6 @@ jobs:
 
     - name: Deploy to GitHub Pages
       run: |
-        mkdir -p ./docs  # 创建 Pages 专用目录
         cp bilibili_dynamic.rss ./docs/
         git add ./docs/bilibili_dynamic.rss
         git commit -m "Update RSS feed"
