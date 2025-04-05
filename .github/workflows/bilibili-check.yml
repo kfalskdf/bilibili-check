@@ -26,9 +26,8 @@ jobs:
     - name: Run checker
       run: python check_dynamic.py
 
-    - name: Deploy to GitHub Pages
-      run: |
-        cp bilibili_dynamic.rss ./docs/
-        git add ./docs/bilibili_dynamic.rss
-        git commit -m "Update RSS feed"
-        git push
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rss-feed
+        path: bilibili_dynamic.rss
