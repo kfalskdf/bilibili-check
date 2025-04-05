@@ -28,7 +28,6 @@ jobs:
 
     - name: Commit changes
       run: |
-        git config --global user.name "kfalskdf"
         git config --global user.email "kfalskdf@4171614.xyz"
         git add .
         git commit -m "Update RSS feed" || echo "No changes to commit"
