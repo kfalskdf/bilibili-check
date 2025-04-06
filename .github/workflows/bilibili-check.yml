@@ -30,6 +30,13 @@ jobs:
         python check_dynamic.py
         ls -la  # 验证文件生成
 
+    - name: Deploy to GitHub Pages
+      run: |
+        cp bilibili_dynamic.rss ./docs/
+        git add ./docs/bilibili_dynamic.rss
+        git commit -m "Update RSS feed"
+        git push
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v4  # 升级到v4版本
       with:
