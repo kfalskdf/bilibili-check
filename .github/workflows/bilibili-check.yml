@@ -2,20 +2,24 @@ name: Bilibili Dynamic Check
 
 on:
   schedule:
-    - cron: "2 4 * * *"
+    - cron: "2 4 * * *"  # 每小时运行一次
   workflow_dispatch:
 
-permissions:  # 新增权限配置
-  actions: write
-  contents: write
+permissions:
+  contents: write  # 允许提交文件
+  actions: write   # 允许管理 artifacts
 
 jobs:
   check:
     runs-on: ubuntu-latest
-    
+    env:
+      BILI_COOKIE: ${{ secrets.BILI_COOKIE }}  # 注入 Cookie 密钥
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 需要完整历史记录来合并 RSS
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -23,29 +27,27 @@ jobs:
         python-version: "3.10"
 
     - name: Install dependencies
-      run: pip install requests,feedgen
-
-    - name: Generate RSS
       run: |
-        python check_dynamic.py
-        ls -la  # 验证文件生成
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-    - name: Deploy to GitHub Pages
-      run: |
-        git config --global user.email "kfalskdf@4171614.xyz"
-        git config --global user.name "kfalskdf"
-        mkdir -p ./docs  # 创建 Pages 专用目录
-        cp bilibili_dynamic.rss ./docs/
-        git add ./docs/bilibili_dynamic.rss
-        git commit -m "Update RSS feed"
-        git push
+    - name: Run dynamic checker
+      run: python check_dynamic.py
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4  # 升级到v4版本
+    - name: Upload RSS Artifact
+      uses: actions/upload-artifact@v4
       with:
         name: bilibili-rss
         path: |
           bilibili_dynamic.rss
           last_dynamic_id.txt
-        retention-days: 7
+        retention-days: 3  # 仅保留3天历史记录
 
+    - name: Auto-commit updates
+      if: success()
+      run: |
+        git config --global user.name "kfalskdf"
+        git config --global user.email "kfalskdf@4171614.xyz"
+        git add bilibili_dynamic.rss last_dynamic_id.txt
+        git diff --quiet && git diff --staged --quiet || git commit -m "Auto: Update RSS feed"
+        git push
