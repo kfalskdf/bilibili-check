@@ -1,4 +1,4 @@
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import requests
 from datetime import datetime
 from feedgen.feed import FeedGenerator
@@ -9,7 +9,7 @@ USER_ID = "486906719"
 BASE_URL = f"https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid={USER_ID}"
 RSS_FILE = "bilibili_dynamic.xml"
 LAST_ID_FILE = "last_dynamic_id.txt"
-load_dotenv()  # 在文件开头添加
+# load_dotenv()  # 在文件开头添加
 
 def get_dynamics():
     headers = {
