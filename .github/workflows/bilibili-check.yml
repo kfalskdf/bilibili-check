@@ -32,6 +32,8 @@ jobs:
 
     - name: Deploy to GitHub Pages
       run: |
+        git config --global user.email "kfalskdf@4171614.xyz"
+        git config --global user.name "kfalskdf"
         mkdir -p ./docs  # 创建 Pages 专用目录
         cp bilibili_dynamic.rss ./docs/
         git add ./docs/bilibili_dynamic.rss
