@@ -47,7 +47,7 @@ def parse_dynamics(data):
                     "title": video_info["title"],
                     "link": f"https://www.bilibili.com/video/{video_info['bvid']}",
                     # "description": video_info["desc"],
-                    "description": f"<img src='{video_info['cover']}'/><p>介绍：{video_info["desc"]}</p><p>地址：https://www.bilibili.com/video/{video_info['bvid']}</p>",
+                    "description": f"<img src='{video_info['cover']}'/><p>介绍：{video_info['desc']}</p><p>地址：https://www.bilibili.com/video/{video_info['bvid']}</p>",
                     "pub_date": pub_date,
                     "author": item["modules"]["module_author"]["name"]
                 })
